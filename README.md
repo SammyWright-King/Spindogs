@@ -1,4 +1,4 @@
-##Explanation
+## Explanation
 Using repositories and interfaces, these classes were injected to the controller class and inherited by the categorycontroller and notecontroller class
 making use of the solid principle
 
