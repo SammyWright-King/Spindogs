@@ -1,3 +1,12 @@
+##Explanation
+Using repositories and interfaces, these classes were injected to the controller class and inherited by the categorycontroller and notecontroller class
+making use of the solid principle
+
+Also, to maintain consistency across files, a redo of the noteController class was done to match the use of repository style in the CategoryController.
+
+A duplicate of the original NoteController class was included with modifications as required for the task named ```NoteController2.php```
+
+
 # Notes Application
 
 A simple application, allowing for registration and logging in of users. Allowing them to store simple text notes no the system, and categorise them.

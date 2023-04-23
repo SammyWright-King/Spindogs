@@ -8,12 +8,6 @@ use Auth;
 
 class CategoryController extends Controller
 {
-    protected $category_repository;
-
-    public function __construct(CategoryRepository $categoryRepository)
-    {
-        $this->category_repository = $categoryRepository;
-    }
 
     /**
      * summary of all categories belonging to signed in user

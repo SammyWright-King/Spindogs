@@ -10,25 +10,21 @@ use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
-    protected $category_repository;
 
-    public function __construct(CategoryRepository $categoryRepository)
-    {
-        $this->category_repository = $categoryRepository;
-    }
-
+    /**
+     * return view with all notes by user
+     */
     public function overview()
     {
-        $notes = Note::where('user_id', Auth::id())->get();
+        //get all notes by authenticated / logged in user
+        $notes = $this->note_repository->getWhere('user_id', Auth::id());
 
-        return view(
-            'note.list',
-            compact(
-                'notes'
-            )
-        );
+        return view('note.list', compact('notes'));
     }
 
+    /**
+     * return the create/edit form page
+     */
     public function create()
     {
         $categories = $this->category_repository->getWhere('user_id', Auth::id());
@@ -36,49 +32,37 @@ class NoteController extends Controller
         return view('note.form', compact('categories'));
     }
 
+    /**
+     *return view with selected note
+     */
     public function view()
     {
-        $note = Note::where('id', request('note_id'))
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        $note = $this->note_repository->getNote(request('note_id'), Auth::id());
 
         $categories = $this->category_repository->getWhere('user_id', Auth::id());
 
-        return view(
-            'note.form',
-            compact('note', 'categories')
-        );
+        return view('note.form', compact('note', 'categories'));
     }
 
-    public function view2()
-    {
-        $note = Note::where('id', request('note_id'))
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        return view(
-            'note.form',
-            compact('note')
-        );
-    }
-
+    /**
+     * @param NoteRequest $request
+     * create or update note
+     */
     public function store(NoteRequest $request)
     {
         $validated = $request->validated();
 
+        $note = $this->note_repository->getNote(request('note_id'), Auth::id());
 
-        $note = Note::where('id', request('note_id'))
-            ->where('user_id', Auth::id())
-            ->first();
+        if ($note) {
+            $this->note_repository->update($note->id, $validated);
 
-        if (!$note) {
-            $note = new Note();
+        }else {
+            $validated['user_id'] = Auth::id();
+            $note = $this->note_repository->save($validated);
         }
 
-        $validated['user_id'] = Auth::id();
-        $note->fill($validated);
-        $note->save();
-
+        //add categories to note
         $note->categories()->sync($request->category, false);
 
         return redirect(route('note.list'))->with('status', 'Note Saved');
