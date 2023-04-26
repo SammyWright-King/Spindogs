@@ -1,4 +1,24 @@
 ## Explanation
+
+Task 1 
+- The bug here is in the migration file while creating the notes table which defines the content column as ```not nullable``` but the requirements 
+specifies the column could be. To resolve this, a new migration file was included to redefine the content column to longText and nullable. 
+
+Note: run the command below to include the doctrine/dbal package to enable the change attribute in the migration file run successfully
+```
+composer require doctrine/dbal
+```
+
+Task 2
+- New migration file defining the category.name and category.user_id stating which user created the category is created
+- Corresponding controller is created for creating, editing and view one/ all categories by authenticated user is created
+
+Task 3
+- A pivot table is created for category and notes with a many to many relationship established between the notes and categories table
+- A multi select tag is added to the notes create/ edit form page displaying all the categories created by currently logged in user
+- On creation / update, the selected categories will be added to the pivot table defined earlier 
+
+
 Using repositories and interfaces, these classes were injected to the controller class and inherited by the categorycontroller and notecontroller class
 making use of the solid principle
 
